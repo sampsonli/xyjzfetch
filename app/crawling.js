@@ -2,7 +2,7 @@ import cheerio from 'cheerio'
 import http from 'http'
 import {getHtml} from './util'
 
-let getCompIdList = async (pn = 1, pgsz = 15) => {
+export const getCompIdList = async (pn = 1, pgsz = 15) => {
 
     let resp = await getHtml(`http://jzsc.mohurd.gov.cn/dataservice/query/comp/list?$pg=${pn}&pgsz=${pgsz}`)
 
@@ -21,7 +21,7 @@ let getCompIdList = async (pn = 1, pgsz = 15) => {
 
 }
 
-let getCompDetail = async (id) => {
+export const getCompDetail = async (id) => {
     let resp = await getHtml(`http://jzsc.mohurd.gov.cn/dataservice/query/comp/compDetail/${id}`)
     const result = {}
     let $ = cheerio.load(resp)
@@ -35,7 +35,7 @@ let getCompDetail = async (id) => {
 }
 
 
-let getCompCaDetail = async (id) => {
+export const getCompCaDetail = async (id) => {
     let resp = await getHtml(`http://jzsc.mohurd.gov.cn/dataservice/query/comp/caDetailList/${id}`)
     const result = {}
     let $ = cheerio.load(resp)
@@ -48,12 +48,5 @@ let getCompCaDetail = async (id) => {
     return result
 }
 
-(async () => {
-//   let ids = await getCompIdList()
-//   for(let i=0; i<ids.length; i++) {
 
-//   }
-  let detail = await getCompDetail('001607220057278907')
-  console.log(detail)
-})()
 
