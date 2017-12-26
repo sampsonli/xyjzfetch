@@ -18,5 +18,9 @@ const jianzaoshi = new mongoose.Schema({
     regspec: {
         type: String,
     },
+    company: {
+        type: mongoose.Schema.Types.ObjectId,
+        refs: 'company'
+    }
 })
 export default mongoose.model('jianzaoshi', jianzaoshi);
