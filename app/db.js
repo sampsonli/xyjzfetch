@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import Jianzaoshi from './models/jianzaoshi';
+import company from './models/company';
 
 mongoose.Promise = Promise;
 

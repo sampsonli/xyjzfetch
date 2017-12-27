@@ -21,7 +21,7 @@ export const getHtml = async (url) => {
 export const getHtmlPost = async (url, args) => {
     let qs = ''
     Object.keys(args).forEach(element => {
-        qs += (element + '=' + args[element]) + '&'
+        qs += (element + '=' + (args[element])) + '&'
     });
     return axios.post(url, qs, {
         headers: {
