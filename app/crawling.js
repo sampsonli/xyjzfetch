@@ -122,10 +122,10 @@ export const getZiZhiList = async (guid) => {
     let $ = cheerio.load(resp)
     const list = []
     $('.RowItemsStyle').each((i, ele) => {
-        let cerno = $(ele).find('td').eq(1).text().replace(/\s*/g, '')
+        let certno = $(ele).find('td').eq(1).text().replace(/\s*/g, '')
         let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
         list.push({
-            cerno,
+            certno,
             name
         })
     })

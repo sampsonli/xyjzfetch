@@ -1,13 +1,12 @@
 import {connectDatabase} from './app/db'
 import {getCompAndCidList, getZiZhiList, getPersonList} from './app/crawling'
+import Company from './app/models/company'
 
 
 (async () => {
 
     const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
     const list = await getCompAndCidList(1);
-    // console.log(list)
-
     let companyList = [], company;
     for(let i = 0; i < list.length; i++) {
       company = {}
@@ -17,9 +16,9 @@ import {getCompAndCidList, getZiZhiList, getPersonList} from './app/crawling'
       companyList.push(company)
     }
 
-    console.log(JSON.stringify(companyList))
+    for(let i = 0; i < companyList.length; i++) {
+      await Company.findOneAndUpdate({name: companyList[i].name}, companyList[i], {upsert: true})
+    }
 
-
-  
-      // connect.close()
+      connect.close()
 })()

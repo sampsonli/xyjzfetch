@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-import company from './models/company';
-
 mongoose.Promise = Promise;
 
 export function connectDatabase(uri) {
