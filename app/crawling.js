@@ -124,10 +124,21 @@ export const getZiZhiList = async (guid) => {
     $('.RowItemsStyle').each((i, ele) => {
         let certno = $(ele).find('td').eq(1).text().replace(/\s*/g, '')
         let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
-        list.push({
-            certno,
-            name
-        })
+        let expired_time = $(ele).find('td').eq(3).text().replace(/\s*/g, '').split('-').join('/')
+        if(expired_time !== '') {
+            expired_time = new Date(expired_time)
+            list.push({
+                certno,
+                name,
+                expired_time
+            })
+        } else {
+            list.push({
+                certno,
+                name
+            })
+        }
+        
     })
     
     return list
