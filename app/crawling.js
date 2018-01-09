@@ -1,5 +1,7 @@
 import cheerio from 'cheerio'
 import http from 'http'
+import path from 'path'
+import fs from 'fs'
 import {getHtml, getHtmlPost} from './util'
 
 export const getCompIdList = async (pn = 1, pgsz = 15) => {
@@ -184,5 +186,105 @@ export const getPersonList = async (guid) => {
     })
     
     return list
+
+}
+
+
+export const getBasicInfo = async (bpath) => {
+
+    const dinfo = fs.readdirSync(bpath)
+    const list = []
+    dinfo.forEach((file, idx) => {
+        if(idx<5) {
+            const content = fs.readFileSync(path.join(bpath, file), 'utf-8')
+            let $ = cheerio.load(content)
+            let trs = $('#ctl00_ContentPlaceHolder1_tdContainer>table>tbody>tr')
+            // let name = tbody.find('td').eq(2).text().replace(/\s*/g, '')
+            // let sex = $(ele).find('td').eq(3).text().replace(/\s*/g, '')
+            // let idcard = $(ele).find('td').eq(4).text().replace(/\s*/g, '')
+            // let regno = $(ele).find('td').eq(5).find('span').html().replace(/<font[^>]*>.*<\/font>(.*)<br>/, ($0,$1)=>$1)
+            // let level = $(ele).find('td').eq(6).find('span').text().replace(/<br>/, '')
+            // let innum =  $(ele).find('td').eq(7).find('span').text().replace(/\s*/g, '')
+            // let ctime = $(ele).find('td').eq(8).text().replace(/\s*/g, '')
+
+            // 基本信息
+            let name = trs.eq(3).find('td').eq(1).text().replace(/\s*/g, '')
+            let regArea = trs.eq(3).find('td').eq(3).text().replace(/\s*/g, '')
+            let detailAddr = trs.eq(4).find('td').eq(1).text().replace(/\s*/g, '')
+
+            let post = trs.eq(5).find('td').eq(1).text().replace(/\s*/g, '')
+            let netAddr = trs.eq(5).find('td').eq(3).text().replace(/\s*/g, '')
+            let email = trs.eq(5).find('td').eq(5).text().replace(/\s*/g, '')
+
+            let gsdjNo = trs.eq(6).find('td').eq(1).text().replace(/\s*/g, '')
+            let dsdjNo = trs.eq(6).find('td').eq(3).text().replace(/\s*/g, '')
+
+
+            // 组织机构代码证
+            let zjjgdmzNo = trs.eq(8).find('td').eq(1).text().replace(/\s*/g, '')
+            let validendTime = trs.eq(8).find('td').eq(5).text().replace(/\s*/g, '')
+
+
+
+            // 企业法定代表人证书
+            let fddbr = trs.eq(10).find('td').eq(1).text().replace(/\s*/g, '')
+            let idcard = trs.eq(10).find('td').eq(3).text().replace(/\s*/g, '')
+            let zhiwu = trs.eq(10).find('td').eq(5).text().replace(/\s*/g, '')
+
+            let zhichen = trs.eq(11).find('td').eq(1).text().replace(/\s*/g, '')
+            let phoneNo = trs.eq(11).find('td').eq(3).text().replace(/\s*/g, '')
+
+            // 企业基本帐户
+            let khbank = trs.eq(13).find('td').eq(1).text().replace(/\s*/g, '')
+            let baseNo = trs.eq(13).find('td').eq(3).text().replace(/\s*/g, '')
+
+
+            // 联系人信息
+            let lxPerson = trs.eq(15).find('td').eq(1).text().replace(/\s*/g, '')
+            let mphone = trs.eq(15).find('td').eq(3).text().replace(/\s*/g, '')
+            let phone = trs.eq(15).find('td').eq(5).text().replace(/\s*/g, '')
+
+            // 营业执照
+            let regNo = trs.eq(18).find('td').eq(1).text().replace(/\s*/g, '')
+            let regMoney = trs.eq(18).find('td').eq(5).text().replace(/\s*/g, '')
+
+
+            let compType = trs.eq(19).find('td').eq(1).text().replace(/\s*/g, '')
+            let jyScope = trs.eq(20).find('td').eq(1).text().replace(/\s*/g, '')
+            let createDate = trs.eq(21).find('td').eq(1).text().replace(/\s*/g, '')
+            let njDate = trs.eq(21).find('td').eq(3).text().replace(/\s*/g, '')
+            let yyqx = trs.eq(22).find('td').eq(1).text().replace(/\s*/g, '')
+
+            list.push({
+                basic: {
+                    name, regArea, detailAddr, post, netAddr, email, gsdjNo, dsdjNo
+                },
+                zzjgdmz: {
+                    zjjgdmzNo, validendTime
+                },
+                qyfddbrzs: {
+                    fddbr, idcard, zhiwu, zhichen, phoneNo
+                },
+                qyjbzh: {
+                    khbank, baseNo
+                },
+                lxrxx: {
+                    lxPerson, mphone, phone
+                },
+                yyzz: {
+                    regNo, regMoney, compType, jyScope, createDate, njDate, yyqx
+                }
+
+            })
+            // console.log(njDate)
+            // console.log(phone)
+        }
+
+        console.log(list)
+        
+        
+    })
+
+
 
 }

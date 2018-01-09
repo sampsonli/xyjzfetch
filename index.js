@@ -1,14 +1,11 @@
 import { connectDatabase } from './app/db'
-import { getCompAndCidList, getZiZhiList, getPersonList } from './app/crawling'
+import { getCompAndCidList, getZiZhiList, getPersonList, getBasicInfo } from './app/crawling'
 import Company from './app/models/company'
 
 
-(async () => {
 
-  const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
-  let count = 0, total;
-  for (let i = 0; i < 365; i++) {
-    const list = await getCompAndCidList(i + 1);
+async function getOnePage (pn) {
+  const list = await getCompAndCidList(pn);
     if(list.length) {
       let companyList = [], company;
       for (let i = 0; i < list.length; i++) {
@@ -22,11 +19,21 @@ import Company from './app/models/company'
       for (let i = 0; i < companyList.length; i++) {
         await Company.findOneAndUpdate({ name: companyList[i].name }, companyList[i], { upsert: true })
       }
-      total = await Company.count()
-      count += list.length
-      console.log(`第${i + 1}次抓取，当前抓了${count}条数据， 当前一共有${total}条数据`)
+      const total = await Company.count()
+      console.log(`第${pn}次抓取， 当前一共有${total}条数据`)
     }
-  
-  }
-  connect.close()
+}
+(async () => {
+
+  // const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
+  // for (let i = 0; i < 365; i++) {
+  //   try {
+  //     await getOnePage(i + 1)
+  //   } catch (e) {
+  //     console.log(`第${i+1}次抓取失败， 失败原因：${e.message}`)
+  //   }
+  // }
+  // connect.close()
+  getBasicInfo('C:/Users/sampson/Desktop/fjszsgdw/show')
+
 })()
