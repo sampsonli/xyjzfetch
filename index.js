@@ -1,6 +1,7 @@
 import { connectDatabase } from './app/db'
 import { getCompAndCidList, getZiZhiList, getPersonList, getBasicInfo } from './app/crawling'
 import Company from './app/models/company'
+import baseInfo from './app/models/baseinfo'
 
 
 
@@ -25,7 +26,7 @@ async function getOnePage (pn) {
 }
 (async () => {
 
-  // const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
+  const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
   // for (let i = 0; i < 365; i++) {
   //   try {
   //     await getOnePage(i + 1)
@@ -33,7 +34,14 @@ async function getOnePage (pn) {
   //     console.log(`第${i+1}次抓取失败， 失败原因：${e.message}`)
   //   }
   // }
-  // connect.close()
-  getBasicInfo('C:/Users/sampson/Desktop/fjszsgdw/show')
+  // 
+  let list = getBasicInfo('C:/Users/sampson/Desktop/fjszsgdw/show')
+  console.log(list)
+  for(let i = 0; i < list.length; i++) {
+    await baseInfo.findOneAndUpdate({ name: list[i].name }, list[i], { upsert: true })
+  }
 
+
+
+  connect.close()
 })()

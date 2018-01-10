@@ -190,23 +190,16 @@ export const getPersonList = async (guid) => {
 }
 
 
-export const getBasicInfo = async (bpath) => {
+export const getBasicInfo = (bpath) => {
 
     const dinfo = fs.readdirSync(bpath)
     const list = []
     dinfo.forEach((file, idx) => {
-        if(idx<5) {
+        if(idx < 100000) {
             const content = fs.readFileSync(path.join(bpath, file), 'utf-8')
             let $ = cheerio.load(content)
             let trs = $('#ctl00_ContentPlaceHolder1_tdContainer>table>tbody>tr')
-            // let name = tbody.find('td').eq(2).text().replace(/\s*/g, '')
-            // let sex = $(ele).find('td').eq(3).text().replace(/\s*/g, '')
-            // let idcard = $(ele).find('td').eq(4).text().replace(/\s*/g, '')
-            // let regno = $(ele).find('td').eq(5).find('span').html().replace(/<font[^>]*>.*<\/font>(.*)<br>/, ($0,$1)=>$1)
-            // let level = $(ele).find('td').eq(6).find('span').text().replace(/<br>/, '')
-            // let innum =  $(ele).find('td').eq(7).find('span').text().replace(/\s*/g, '')
-            // let ctime = $(ele).find('td').eq(8).text().replace(/\s*/g, '')
-
+           
             // 基本信息
             let name = trs.eq(3).find('td').eq(1).text().replace(/\s*/g, '')
             let regArea = trs.eq(3).find('td').eq(3).text().replace(/\s*/g, '')
@@ -255,9 +248,40 @@ export const getBasicInfo = async (bpath) => {
             let njDate = trs.eq(21).find('td').eq(3).text().replace(/\s*/g, '')
             let yyqx = trs.eq(22).find('td').eq(1).text().replace(/\s*/g, '')
 
+            // 企业资质证书
+            let certNo = trs.eq(24).find('td').eq(1).text().replace(/\s*/g, '')
+            let validDate = trs.eq(24).find('td').eq(5).text().replace(/\s*/g, '')
+            let qyfzr = trs.eq(25).find('td').eq(1).text().replace(/\s*/g, '')
+            let qyfzrzw = trs.eq(25).find('td').eq(3).text().replace(/\s*/g, '')
+            let qyfzrzc = trs.eq(25).find('td').eq(5).text().replace(/\s*/g, '')
+            let jsfzr = trs.eq(26).find('td').eq(1).text().replace(/\s*/g, '')
+            let jsfzrzw = trs.eq(26).find('td').eq(3).text().replace(/\s*/g, '')
+            let jsfzrzc = trs.eq(26).find('td').eq(5).text().replace(/\s*/g, '')
+            let beizhu = trs.eq(27).find('td').eq(1).text().replace(/\s*/g, '')
+
+            // 安全生产许可证
+            let ifyllh = trs.eq(29).find('td').eq(1).text().replace(/\s*/g, '')
+            let bianhao = trs.eq(30).find('td').eq(1).text().replace(/\s*/g, '')
+            let xukerange = trs.eq(31).find('td').eq(1).text().replace(/\s*/g, '')
+            let fzjg = trs.eq(32).find('td').eq(1).text().replace(/\s*/g, '')
+            let fzdate = trs.eq(33).find('td').eq(1).text().replace(/\s*/g, '')
+            let enddate = trs.eq(33).find('td').eq(3).text().replace(/\s*/g, '')
+
+
+            // 外省进赣企业补充信息
+            let zjxfgsdz = trs.eq(35).find('td').eq(1).text().replace(/\s*/g, '')
+            let zjxfgsfzr = trs.eq(36).find('td').eq(1).text().replace(/\s*/g, '')
+            let zjxfgsph = trs.eq(36).find('td').eq(3).text().replace(/\s*/g, '')
+            let zjxfgsmph = trs.eq(36).find('td').eq(5).text().replace(/\s*/g, '')
+            let ifbeian = trs.eq(37).find('td').eq(1).text().replace(/\s*/g, '')
+            let xxshzt = trs.eq(38).find('td').eq(1).text().replace(/\s*/g, '')
+
+            
+   
             list.push({
+                name,
                 basic: {
-                    name, regArea, detailAddr, post, netAddr, email, gsdjNo, dsdjNo
+                    regArea, detailAddr, post, netAddr, email, gsdjNo, dsdjNo
                 },
                 zzjgdmz: {
                     zjjgdmzNo, validendTime
@@ -273,18 +297,25 @@ export const getBasicInfo = async (bpath) => {
                 },
                 yyzz: {
                     regNo, regMoney, compType, jyScope, createDate, njDate, yyqx
+                },
+                qyzzzs: {
+                    certNo, validDate, qyfzr, qyfzrzw, qyfzrzc, jsfzr, jsfzrzw, jsfzrzc, beizhu
+                },
+                anquanxk: {
+                    ifyllh, bianhao, xukerange, fzjg, fzdate, enddate
+                },
+                wsjginfo: {
+                    zjxfgsdz, zjxfgsfzr, zjxfgsph, zjxfgsmph, ifbeian, xxshzt
+
                 }
+
 
             })
             // console.log(njDate)
             // console.log(phone)
         }
-
-        console.log(list)
-        
         
     })
 
-
-
+    return list
 }
