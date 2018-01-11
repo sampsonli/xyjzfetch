@@ -4,11 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node bin/www"
+    "start": "node bin/www",
+    "craw": "cross-env CRAW_WEB=true node bin/www"
   },
   "dependencies": {
     "axios": "^0.17.1",
     "cheerio": "^1.0.0-rc.2",
+    "cross-env": "^5.1.3",
     "mongoose": "^4.13.7"
   },
   "devDependencies": {
