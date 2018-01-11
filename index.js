@@ -2,6 +2,7 @@ import { connectDatabase } from './app/db'
 import { getCompAndCidList, getZiZhiList, getPersonList, getBasicInfo } from './app/crawling'
 import Company from './app/models/company'
 import baseInfo from './app/models/baseinfo'
+import baseinfo from './app/models/baseinfo';
 
 
 
@@ -18,7 +19,12 @@ async function getOnePage (pn) {
       }
   
       for (let i = 0; i < companyList.length; i++) {
-        await Company.findOneAndUpdate({ name: companyList[i].name }, companyList[i], { upsert: true })
+        let base = await baseinfo.findOne({name: companyList[i].name})
+        let allinfo = companyList[i]
+        if(base) {
+          allinfo = {...base, ...companyList[i]}
+        }
+        await Company.findOneAndUpdate({ name: companyList[i].name }, allinfo, { upsert: true })
       }
       const total = await Company.count()
       console.log(`第${pn}次抓取， 当前一共有${total}条数据`)
