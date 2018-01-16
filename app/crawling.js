@@ -106,16 +106,28 @@ export const getCompAndCidList = async (pn = 1) => {
 }
 
 
+const getZizhiEventValidate = async (url) => {
+    let resp = await getHtml(url)
+    let $ = cheerio.load(resp)
+    let viewState =$('#__VIEWSTATE')[0].attribs.value
+    let eventValid = $('#__EVENTVALIDATION')[0].attribs.value
+    return {viewState, eventValid}
+
+}
+
 export const getZiZhiList = async (guid) => {
 //    ctl00$ScriptManager1=ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$rdoStatus$1&__EVENTTARGET=ctl00%24ContentPlaceHolder1%24rdoStatus%241&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE=%2FwEPDwUKMTc4MjU3NDc1NA8WBh4IVmlld1R5cGUFATIeCkRhbldlaUd1aWQFJDA4M2YzMjM4LTI4YjMtNDk1ZC1iYTUxLTMxNDBmYjY2MmY5ZR4OU2VydmVyVGltZVNwYW4HAAAAAABAP0AWAmYPZBYCAgMPZBYIAgUPFgIeBFRleHQFEuaWveW3pei1hOi0qOWIl%2BihqGQCCQ8WBB8DBaQBPHNwYW4gaWQ9c3BhblJldHVybiBjbGFzcz0iUmV0dXJuT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdSZXR1cm5PdmVyJyIgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J1JldHVybk91dCciIG9uY2xpY2s9J2phdmFzY3JpcHQ6aGlzdG9yeS5nbygtMSknPjwvc3Bhbj4eB1Zpc2libGVoZAILDxYCHwMFpAE8c3BhbiBpZD0iU3Bhbl9jbG9zZSIgY2xhc3M9IkNsb3NlT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdDbG9zZU92ZXInIiBvbmNsaWNrPSdqYXZhc2NyaXB0OndpbmRvdy5jbG9zZSgpOycgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J0Nsb3NlT3V0JyI%2BPC9zcGFuPmQCDQ9kFgJmD2QWAmYPZBYIAgEPDxYCHwMFHuaWveW3peS8geS4mui1hOi0qOihqOS4tOaXtuihqGRkAgYPZBYCZg9kFgICAQ8QZGQWAWZkAg4PDxYGHg5DdXN0b21JbmZvVGV4dAWOAeiusOW9leaAu%2BaVsO%2B8mjxmb250IGNvbG9yPSJibHVlIj48Yj4wPC9iPjwvZm9udD4g5oC76aG15pWw77yaPGZvbnQgY29sb3I9ImJsdWUiPjxiPjA8L2I%2BPC9mb250PiDlvZPliY3pobXvvJo8Zm9udCBjb2xvcj0icmVkIj48Yj4xPC9iPjwvZm9udD4eC1JlY29yZGNvdW50Zh4QQ3VycmVudFBhZ2VJbmRleAIBZGQCEA88KwALAQAPFggeC18hSXRlbUNvdW50Zh4IRGF0YUtleXMWAB4JUGFnZUNvdW50AgEeFV8hRGF0YVNvdXJjZUl0ZW1Db3VudGZkZGR8eOy1fW3dZnjQuyrEXOZzr9ZxIg%3D%3D&__EVENTVALIDATION=%2FwEWEALI2NmNBgLC3YvaAwLQopvSAgLSktWgBQLTktWgBQLQktWgBQLRktWgBQKHqtiADQKEqtiADQKJxfLuAQL3uvOGAgKI%2BJrmBQKFy4zdBQLGrLf4BALhldWNDwKQ2vtNSR1SlZlKIBJchViFeazwyrQ4eMM%3D&ctl00$ContentPlaceHolder1$HidState=0&ctl00$ContentPlaceHolder1$S_ZiZhiJiBieCode=%E6%89%80%E6%9C%89%E9%80%89%E9%A1%B9&ctl00$ContentPlaceHolder1$rdoStatus=3&
 
-    let resp = await getHtmlPost(`http://ggzy.jiangxi.gov.cn/jxhy/HuiYuanInfoMis_JX/BackEnd/ShiGongZiZhi/ZiZhi_List.aspx?ViewType=2&DanWeiType=131&DanWeiGuid=${guid}`, {
+    const url =  `http://ggzy.jiangxi.gov.cn/jxhy/HuiYuanInfoMis_JX/BackEnd/ShiGongZiZhi/ZiZhi_List.aspx?ViewType=2&DanWeiType=131&DanWeiGuid=${guid}`
+    const {viewState, eventValid} = await getZizhiEventValidate(url)
+
+    let resp = await getHtmlPost(url, {
         ctl00$ScriptManager1:'ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$rdoStatus$1',
         __EVENTTARGET:'ctl00$ContentPlaceHolder1$rdoStatus$1',
         __EVENTARGUMENT:'',
         __LASTFOCUS:'',
-        __VIEWSTATE:encodeURIComponent('/wEPDwUKMTc4MjU3NDc1NA8WBh4IVmlld1R5cGUFATIeCkRhbldlaUd1aWQFJDA4M2YzMjM4LTI4YjMtNDk1ZC1iYTUxLTMxNDBmYjY2MmY5ZR4OU2VydmVyVGltZVNwYW4HAAAAAACIU0AWAmYPZBYCAgMPZBYIAgUPFgIeBFRleHQFEuaWveW3pei1hOi0qOWIl+ihqGQCCQ8WBB8DBaQBPHNwYW4gaWQ9c3BhblJldHVybiBjbGFzcz0iUmV0dXJuT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdSZXR1cm5PdmVyJyIgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J1JldHVybk91dCciIG9uY2xpY2s9J2phdmFzY3JpcHQ6aGlzdG9yeS5nbygtMSknPjwvc3Bhbj4eB1Zpc2libGVoZAILDxYCHwMFpAE8c3BhbiBpZD0iU3Bhbl9jbG9zZSIgY2xhc3M9IkNsb3NlT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdDbG9zZU92ZXInIiBvbmNsaWNrPSdqYXZhc2NyaXB0OndpbmRvdy5jbG9zZSgpOycgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J0Nsb3NlT3V0JyI+PC9zcGFuPmQCDQ9kFgJmD2QWAmYPZBYIAgEPDxYCHwMFHuaWveW3peS8geS4mui1hOi0qOihqOS4tOaXtuihqGRkAgYPZBYCZg9kFgICAQ8QZGQWAWZkAg4PDxYGHg5DdXN0b21JbmZvVGV4dAWOAeiusOW9leaAu+aVsO+8mjxmb250IGNvbG9yPSJibHVlIj48Yj4wPC9iPjwvZm9udD4g5oC76aG15pWw77yaPGZvbnQgY29sb3I9ImJsdWUiPjxiPjA8L2I+PC9mb250PiDlvZPliY3pobXvvJo8Zm9udCBjb2xvcj0icmVkIj48Yj4xPC9iPjwvZm9udD4eC1JlY29yZGNvdW50Zh4QQ3VycmVudFBhZ2VJbmRleAIBZGQCEA88KwALAQAPFggeC18hSXRlbUNvdW50Zh4IRGF0YUtleXMWAB4JUGFnZUNvdW50AgEeFV8hRGF0YVNvdXJjZUl0ZW1Db3VudGZkZGSOLt3Jb7/PHDzEtTVke3k3R/A4Sw=='),
-        __EVENTVALIDATION:encodeURIComponent('/wEWEAKDwub6BQLC3YvaAwLQopvSAgLSktWgBQLTktWgBQLQktWgBQLRktWgBQKHqtiADQKEqtiADQKJxfLuAQL3uvOGAgKI+JrmBQKFy4zdBQLGrLf4BALhldWNDwKQ2vtNJVWUEDWJyGO3XjvbB2K1DEzgQYc='),
+        __VIEWSTATE:encodeURIComponent(viewState),
+        __EVENTVALIDATION:encodeURIComponent(eventValid),
         ctl00$ContentPlaceHolder1$HidState:0,
         ctl00$ContentPlaceHolder1$S_ZiZhiJiBieCode:encodeURIComponent('所有选项'),
         ctl00$ContentPlaceHolder1$rdoStatus:3
@@ -123,23 +135,26 @@ export const getZiZhiList = async (guid) => {
     const result = {}
     let $ = cheerio.load(resp)
     const list = []
-    $('.RowItemsStyle').each((i, ele) => {
-        let certno = $(ele).find('td').eq(1).text().replace(/\s*/g, '')
-        let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
-        let expired_time = $(ele).find('td').eq(3).text().replace(/\s*/g, '').split('-').join('/')
-        if(expired_time !== '') {
-            expired_time = new Date(expired_time)
-            list.push({
-                certno,
-                name,
-                expired_time
-            })
-        } else {
-            list.push({
-                certno,
-                name
-            })
+    $('.GridView tr').each((i, ele) => {
+        if(i>0) {
+            let certno = $(ele).find('td').eq(1).text().replace(/\s*/g, '')
+            let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
+            let expired_time = $(ele).find('td').eq(3).text().replace(/\s*/g, '').split('-').join('/')
+            if(expired_time !== '') {
+                expired_time = new Date(expired_time)
+                list.push({
+                    certno,
+                    name,
+                    expired_time
+                })
+            } else {
+                list.push({
+                    certno,
+                    name
+                })
+            }
         }
+        
         
     })
     
@@ -148,13 +163,15 @@ export const getZiZhiList = async (guid) => {
 }
 
 export const getPersonList = async (guid) => {
-    let resp = await getHtmlPost(`http://ggzy.jiangxi.gov.cn/jxhy/HuiYuanInfoMis_JX/BackEnd/PMInfo/PM_List.aspx?ViewType=2&DanWeiType=131&DanWeiGuid=${guid}`, {
+    const url = `http://ggzy.jiangxi.gov.cn/jxhy/HuiYuanInfoMis_JX/BackEnd/PMInfo/PM_List.aspx?ViewType=2&DanWeiType=131&DanWeiGuid=${guid}`
+    const {viewState, eventValid} = await getZizhiEventValidate(url)
+    let resp = await getHtmlPost(url, {
         ctl00$ScriptManager1:'ctl00$ContentPlaceHolder1$UpdatePanel1|ctl00$ContentPlaceHolder1$rdoStatus$1',
         __EVENTTARGET:'ctl00%24ContentPlaceHolder1%24rdoStatus%241',
         __EVENTARGUMENT: '',
         __LASTFOCUS: '',
-        __VIEWSTATE:'%2FwEPDwUJMjEzNTU5NzQ3DxYGHgpEYW5XZWlHdWlkBSRhODA3N2JjNC0wNmIzLTQwNzMtYWVjMy05NzI2OTIwMzk0ZjYeCkRhbldlaVR5cGUFAzEzMR4OU2VydmVyVGltZVNwYW4HAAAAAABwV0AWAmYPZBYCAgMPZBYIAgUPFgIeBFRleHQFD%2BW7uumAoOW4iOWIl%2BihqGQCCQ8WBB8DBaQBPHNwYW4gaWQ9c3BhblJldHVybiBjbGFzcz0iUmV0dXJuT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdSZXR1cm5PdmVyJyIgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J1JldHVybk91dCciIG9uY2xpY2s9J2phdmFzY3JpcHQ6aGlzdG9yeS5nbygtMSknPjwvc3Bhbj4eB1Zpc2libGVoZAILDxYCHwMFpAE8c3BhbiBpZD0iU3Bhbl9jbG9zZSIgY2xhc3M9IkNsb3NlT3V0IiAgb25tb3VzZW92ZXI9InRoaXMuY2xhc3NOYW1lPSdDbG9zZU92ZXInIiBvbmNsaWNrPSdqYXZhc2NyaXB0OndpbmRvdy5jbG9zZSgpOycgb25tb3VzZW91dD0idGhpcy5jbGFzc05hbWU9J0Nsb3NlT3V0JyI%2BPC9zcGFuPmQCDQ9kFgICAQ9kFgJmD2QWCAIBDw8WAh8DBRjpobnnm67nu4%2FnkIbooajkuLTml7booahkZAIGD2QWAmYPZBYCAgEPEGRkFgFmZAIMDw8WBh4OQ3VzdG9tSW5mb1RleHQFjgHorrDlvZXmgLvmlbDvvJo8Zm9udCBjb2xvcj0iYmx1ZSI%2BPGI%2BMDwvYj48L2ZvbnQ%2BIOaAu%2BmhteaVsO%2B8mjxmb250IGNvbG9yPSJibHVlIj48Yj4wPC9iPjwvZm9udD4g5b2T5YmN6aG177yaPGZvbnQgY29sb3I9InJlZCI%2BPGI%2BMTwvYj48L2ZvbnQ%2BHgtSZWNvcmRjb3VudGYeEEN1cnJlbnRQYWdlSW5kZXgCAWRkAg4PPCsACwEADxYIHgtfIUl0ZW1Db3VudGYeCERhdGFLZXlzFgAeCVBhZ2VDb3VudAIBHhVfIURhdGFTb3VyY2VJdGVtQ291bnRmZGRkEzIo%2BUU2a38Y6za14aPG40SI4Ig%3D',
-        __EVENTVALIDATION:'%2FwEWDAKNoeGKBgLC3YvaAwLZn9utDQKgv%2Fb5BwKHqtiADQKEqtiADQKJxfLuAQL3uvOGAgKI%2BJrmBQLGrLf4BALhldWNDwKQ2vtN2oApNbqptDQz5UtiAHUiPwlU%2FO4%3D',
+        __VIEWSTATE:encodeURIComponent(viewState),
+        __EVENTVALIDATION:encodeURIComponent(eventValid),
         ctl00$ContentPlaceHolder1$HidState:0,
         ctl00$ContentPlaceHolder1$S_PMGuid:'',
         ctl00$ContentPlaceHolder1$S_PMName:'',
@@ -163,26 +180,29 @@ export const getPersonList = async (guid) => {
     const result = {}
     let $ = cheerio.load(resp)
     const list = []
-    $('.RowItemsStyle').each((i, ele) => {
-        let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
-        let sex = $(ele).find('td').eq(3).text().replace(/\s*/g, '')
-        let idcard = $(ele).find('td').eq(4).text().replace(/\s*/g, '')
-        let regno = $(ele).find('td').eq(5).find('span').html().replace(/<font[^>]*>.*<\/font>(.*)<br>/, ($0,$1)=>$1)
-        let level = $(ele).find('td').eq(6).find('span').text().replace(/<br>/, '')
-        let innum =  $(ele).find('td').eq(7).find('span').text().replace(/\s*/g, '')
-        let ctime = $(ele).find('td').eq(8).text().replace(/\s*/g, '')
-        ctime = new Date(ctime.replace(/^(\d{4})年(\d{2})月(\d{2})日/, ($0,$1,$2,$3) => {
-            return [$1, $2, $3].join('/')
-        }))
-        list.push({
-            name,
-            sex,
-            idcard,
-            regno,
-            level,
-            innum,
-            ctime
-        })
+    $('.GridView tr').each((i, ele) => {
+        if(i>0) {
+            let name = $(ele).find('td').eq(2).text().replace(/\s*/g, '')
+            let sex = $(ele).find('td').eq(3).text().replace(/\s*/g, '')
+            let idcard = $(ele).find('td').eq(4).text().replace(/\s*/g, '')
+            let regno = $(ele).find('td').eq(5).find('span').html().replace(/<font[^>]*>.*<\/font>(.*)<br>/, ($0,$1)=>$1)
+            let level = $(ele).find('td').eq(6).find('span').text().replace(/<br>/, '')
+            let innum =  $(ele).find('td').eq(7).find('span').text().replace(/\s*/g, '')
+            let ctime = $(ele).find('td').eq(8).text().replace(/\s*/g, '')
+            ctime = new Date(ctime.replace(/^(\d{4})年(\d{2})月(\d{2})日/, ($0,$1,$2,$3) => {
+                return [$1, $2, $3].join('/')
+            }))
+            list.push({
+                name,
+                sex,
+                idcard,
+                regno,
+                level,
+                innum,
+                ctime
+            })
+        }
+        
     })
     
     return list
