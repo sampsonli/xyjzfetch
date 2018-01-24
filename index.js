@@ -22,7 +22,10 @@ async function getOnePage(pn) {
       let base = await baseinfo.findOne({ name: companyList[i].name })
       let allinfo = companyList[i]
       if (base) {
-        allinfo = { ...base, ...companyList[i] }
+        delete base._doc.__v
+        delete base._doc._id
+        allinfo = { ...base._doc, ...companyList[i] }
+        // console.log(allinfo)
         await Company.findOneAndUpdate({ name: companyList[i].name }, allinfo, { upsert: true })
       }
       // await Company.findOneAndUpdate({ name: companyList[i].name }, allinfo, { upsert: true })
@@ -33,10 +36,10 @@ async function getOnePage(pn) {
 }
 (async () => {
 
-  const connect = await connectDatabase('mongodb://localhost/xyjzfetch-test')
+  const connect = await connectDatabase('mongodb://localhost/xyjzfetch')
   try {
     if (process.env.CRAW_WEB === 'true') {
-      for (let i = 0; i < 365; i++) {
+      for (let i = 316  ; i < 365; i++) {
         try {
           await getOnePage(i + 1)
         } catch (e) {

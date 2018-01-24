@@ -189,9 +189,14 @@ export const getPersonList = async (guid) => {
             let level = $(ele).find('td').eq(6).find('span').text().replace(/<br>/, '')
             let innum =  $(ele).find('td').eq(7).find('span').text().replace(/\s*/g, '')
             let ctime = $(ele).find('td').eq(8).text().replace(/\s*/g, '')
-            ctime = new Date(ctime.replace(/^(\d{4})年(\d{2})月(\d{2})日/, ($0,$1,$2,$3) => {
+            ctime = ctime.replace(/^(\d{4})年(\d{2})月(\d{2})日/, ($0,$1,$2,$3) => {
                 return [$1, $2, $3].join('/')
-            }))
+            })
+            if(ctime.length === 10) {
+                ctime = new Date(ctime)
+            } else {
+                ctime = null
+            }
             list.push({
                 name,
                 sex,
