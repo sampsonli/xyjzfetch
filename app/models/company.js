@@ -9,8 +9,7 @@ const company = new mongoose.Schema({
     desc: {
         type: String,
     },
-
-
+    guid: String,
     basic: {
         regArea: String, detailAddr: String, post: String, netAddr: String, email: String, gsdjNo: String, dsdjNo: String
     },

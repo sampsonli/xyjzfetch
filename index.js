@@ -34,18 +34,39 @@ async function getOnePage(pn) {
     console.log(`第${pn}次抓取， 当前一共有${total}条数据`)
   }
 }
+
+async function getOne (base) {
+  let allinfo = {...base._doc}
+  delete allinfo.__v
+  delete allinfo._id
+  allinfo.zizhi = await getZiZhiList(allinfo.guid)
+  allinfo.plist = await getPersonList(allinfo.guid)
+  await Company.findOneAndUpdate({ name: allinfo.name }, allinfo, { upsert: true })
+}
+async function doCraw() {
+  let count = await baseinfo.find({}).count()
+  for(let i = 0; i< count; i++) {
+    try {
+      let base = (await baseinfo.find({}).skip(i).limit(1))[0]
+      await getOne(base)
+      console.log("success one item:" + i)
+    } catch(e) {
+      console.log("fail one item:" + i)
+    }
+    
+
+  }
+ 
+
+}
+
+
 (async () => {
 
   const connect = await connectDatabase('mongodb://localhost/xyjzfetch')
   try {
     if (process.env.CRAW_WEB === 'true') {
-      for (let i = 316  ; i < 365; i++) {
-        try {
-          await getOnePage(i + 1)
-        } catch (e) {
-          console.log(`第${i + 1}次抓取失败， 失败原因：${e.message}`)
-        }
-      }
+      await doCraw()
   
     } else {
       let list = getBasicInfo('C:/Users/sampson/Desktop/fjszsgdw/show')
