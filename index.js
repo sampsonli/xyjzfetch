@@ -49,7 +49,6 @@ async function getOnePage(pn) {
   
     } else {
       let list = getBasicInfo('C:/Users/sampson/Desktop/fjszsgdw/show')
-      console.log(list)
       for (let i = 0; i < list.length; i++) {
         await baseInfo.findOneAndUpdate({ name: list[i].name }, list[i], { upsert: true })
       }

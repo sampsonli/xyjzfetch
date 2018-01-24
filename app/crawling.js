@@ -220,10 +220,13 @@ export const getBasicInfo = (bpath) => {
     const dinfo = fs.readdirSync(bpath)
     const list = []
     dinfo.forEach((file, idx) => {
-        if(idx < 100000) {
+        if(idx < 2000000) {
             const content = fs.readFileSync(path.join(bpath, file), 'utf-8')
             let $ = cheerio.load(content)
             let trs = $('#ctl00_ContentPlaceHolder1_tdContainer>table>tbody>tr')
+            
+            let match = $('[name="aspnetForm"]')[0].attribs.action.match(/DanWeiGuid=(.*)$/)
+            let guid = match[1]
            
             // 基本信息
             let name = trs.eq(3).find('td').eq(1).text().replace(/\s*/g, '')
@@ -305,6 +308,7 @@ export const getBasicInfo = (bpath) => {
    
             list.push({
                 name,
+                guid,
                 basic: {
                     regArea, detailAddr, post, netAddr, email, gsdjNo, dsdjNo
                 },

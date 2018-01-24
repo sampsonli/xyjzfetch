@@ -3,6 +3,7 @@ const baseInfo = new mongoose.Schema({
     name: {
         type: String, required: true, unique: true
     },
+    guid: String,
     basic: {
         regArea: String, detailAddr: String, post: String, netAddr: String, email: String, gsdjNo: String, dsdjNo: String
     },
