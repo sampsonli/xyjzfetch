@@ -6,7 +6,8 @@ export const getHtml = async (url) => {
     return axios.get(url, {
         headers: {
             'Content-Type': 'text/html'
-        }
+        },
+        timeout: 5000
     }).then((response) => {
         if (response.status === 200) {
             return response.data
@@ -26,7 +27,8 @@ export const getHtmlPost = async (url, args) => {
     return axios.post(url, qs, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        timeout: 5000
     }).then((response) => {
         if (response.status === 200) {
             return response.data
