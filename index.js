@@ -45,7 +45,7 @@ async function getOne (base) {
 }
 async function doCraw() {
   let count = await baseinfo.find({}).count()
-  for(let i = 350; i< count; i++) {
+  for(let i = 360; i< count; i++) {
     let base = (await baseinfo.find({}).skip(i).limit(1))[0]
     try {
       await getOne(base)
@@ -53,6 +53,7 @@ async function doCraw() {
     } catch(e) {
       console.log("fail one item:" + i + ' and retry...')
       await getOne(base)
+      console.log("success one item:" + i)
     }
     
 
